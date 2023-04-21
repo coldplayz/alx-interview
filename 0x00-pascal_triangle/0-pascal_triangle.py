@@ -3,25 +3,25 @@
 '''
 
 
-def pascal_triangle(n):
+def pascal_triangle(num):
     ''' Returns a list of lists of integers
         representing the Pascal's triangle of n.
     '''
     res = []
 
-    if n <= 0:
+    if num <= 0:
         return res
-    if n == 1:
+    if num == 1:
         return [[1],]
-    if n == 2:
+    if num == 2:
         return [[1], [1, 1]]
 
-    # n is greater than 2
+    # num is greater than 2
     res.extend([[1,], [1, 1]])
 
     res_idx = 1
 
-    while res_idx < (n - 1):
+    while res_idx < (num - 1):
         # Take the last list in res and use it to compose the next list
 
         last_list = res[res_idx].copy()  # avoid modifying original
