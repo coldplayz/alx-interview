@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3  # pylint: disable=invalid-name
 ''' Code Pascal's Triangle.
 '''
 
