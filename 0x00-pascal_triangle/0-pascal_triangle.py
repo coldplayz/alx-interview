@@ -12,12 +12,12 @@ def pascal_triangle(num):
     if num <= 0:
         return res
     if num == 1:
-        return [[1],]
+        return [[1]]
     if num == 2:
         return [[1], [1, 1]]
 
     # num is greater than 2
-    res.extend([[1,], [1, 1]])
+    res.extend([[1], [1, 1]])
 
     res_idx = 1
 
