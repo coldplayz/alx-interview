@@ -22,19 +22,20 @@ def canUnlockAll(boxes):
             - Return True if all boxes can be opened, else return False.
     '''
     if not boxes or len(boxes) == 1:
-        # Empty container
+        # Empty container, or only one box
         return True
 
     if not boxes[0]:
         # No keys for other boxes
         return False
 
+    # At this point, there're at least two boxes, with the first non-empty.
     keys = boxes[0]  # initialize the keys list
-    boxes_opened = {}  # for tracking opened boxes
+    boxes_opened = {}  # dictionary, for tracking opened boxes
 
     boxes_opened.update({0: True})  # first box opened by default
 
-    key_idx = 0  # will serve as key indices into @keys
+    key_idx = 0  # will store key indices into @keys
     while True:
         box_idx = keys[key_idx]  # key index into @boxes
 
