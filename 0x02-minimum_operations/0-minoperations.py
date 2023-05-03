@@ -10,9 +10,9 @@ def getPrimeDivisor(n: int) -> int:
         return n
 
     # n > 3
-    divisor: int = 2
-    remainder: int = 1  # seed
-    limit: int = n // 2
+    divisor = 2
+    remainder = 1  # seed
+    limit = n // 2
 
     while remainder != 0:
         remainder = n % divisor
@@ -69,8 +69,8 @@ def minOperations(n: int) -> int:
         # This targets the first/initial value of n
         return 0
 
-    minPrimeDivisor: int = getPrimeDivisor(n)
-    quotient: int = n // minPrimeDivisor
+    minPrimeDivisor = getPrimeDivisor(n)
+    quotient = n // minPrimeDivisor
 
     if quotient == 1:
         # Base case
