@@ -6,7 +6,7 @@ import re
 import typing
 
 # create and initialize dict for aggregating data
-log_tracker: typing.Dict[str, int] = {}
+log_tracker = {}
 
 CYCLE = 1
 status_codes = ['200', '301', '400', '401', '403', '404', '405', '500']
