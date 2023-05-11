@@ -3,7 +3,6 @@
 '''
 import sys
 import re
-import typing
 
 # create and initialize dict for aggregating data
 log_tracker = {}
