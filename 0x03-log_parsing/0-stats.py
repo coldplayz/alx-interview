@@ -1,40 +1,77 @@
 #!/usr/bin/python3
-"""Performs log parsing from stdin"""
-
-import re
+''' Log parser.
+'''
 import sys
-counter = 0
-file_size = 0
-statusC_counter = {200: 0, 301: 0, 400: 0,
-                   401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+import re
 
 
-def printCodes(dict, file_s):
-    """Prints the status code and the number of times they appear"""
-    print("File size: {}".format(file_s))
-    for key in sorted(dict.keys()):
-        if statusC_counter[key] != 0:
-            print("{}: {}".format(key, dict[key]))
+def parse_log():
+    ''' Parse logs piped in from another process.
+    '''
+    # create dict for aggregating data
+    log_tracker = {}
 
+    CYCLE = 1
+    status_codes = ['200', '301', '400', '401', '403', '404', '405', '500']
 
-if __name__ == "__main__":
+    # match/search regex parts
+    IP_REGEX = r'([1-9]|[1-9][0-9]|' +\
+        r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))' +\
+        r'\.([1-9]|[1-9][0-9]|' +\
+        r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))' +\
+        r'\.([1-9]|[1-9][0-9]|' +\
+        r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))' +\
+        r'\.([1-9]|[1-9][0-9]|' +\
+        r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))'
+    DATE_REGEX = r'\[.*?\]'  # lazy quantifier
+    STATUS_REGEX = r'(200|301|400|401|403|404|405|500)'
+    # STATUS_REGEX = r'([2-5]0[01345])'  # in the `status_codes` range
+    SIZE_REGEX = r'([0-9]*)'
+    # SIZE_REGEX = r'([1-9]|[1-9][0-9]|[1-9][0-9]{2}|10[0-2][0-4])'
+
     try:
-        for line in sys.stdin:
-            split_string = re.split('- |"|"| " " ', str(line))
-            statusC_and_file_s = split_string[-1]
-            if counter != 0 and counter % 10 == 0:
-                printCodes(statusC_counter, file_size)
-            counter = counter + 1
-            try:
-                statusC = int(statusC_and_file_s.split()[0])
-                f_size = int(statusC_and_file_s.split()[1])
-                # print("Status Code {} size {}".format(statusC, f_size))
-                if statusC in statusC_counter:
-                    statusC_counter[statusC] += 1
-                file_size = file_size + f_size
-            except:
-                pass
-        printCodes(statusC_counter, file_size)
-    except KeyboardInterrupt:
-        printCodes(statusC_counter, file_size)
-        raise
+        for log in sys.stdin:
+            # print(log)
+            # get a Match object, or None
+            match = re.search(
+                    r'^{} - {} "GET /projects/260 HTTP/1.1" {} {}$'.format(
+                        IP_REGEX, DATE_REGEX, STATUS_REGEX, SIZE_REGEX), log)
+            # print(match)
+            if match:
+                # get captured groups, in a tuple
+                groups = match.groups()
+                # get file size and status code, as strings
+                f_size = groups[-1]
+                status = groups[-2]
+                # update logs
+                log_tracker.update({
+                    'total_size': log_tracker.get(
+                        'total_size', 0) + int(f_size),
+                    status: log_tracker.get(status, 0) + 1,
+                    })
+
+            # print('##########################')
+
+            if CYCLE % 10 == 0:
+                # print stats every 10 log lines
+                print('File size:', log_tracker.get('total_size'))
+                for status_code in status_codes:
+                    if log_tracker.get(status_code):
+                        # status code has been seen, and is being tracked
+                        print("{}: {}".format(
+                            status_code, log_tracker.get(status_code)))
+
+            CYCLE += 1
+    except KeyboardInterrupt as e:
+        # CTRL + C entered
+        print('File size:', log_tracker.get('total_size'))
+        for status_code in status_codes:
+            if log_tracker.get(status_code):
+                # status code has been seen, and is being tracked
+                print("{}: {}".format(
+                    status_code, log_tracker.get(status_code)))
+        raise e
+
+
+if __name__ == '__main__':
+    parse_log()
