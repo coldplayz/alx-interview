@@ -54,7 +54,7 @@ def parse_log():
 
             if CYCLE % 10 == 0:
                 # print stats every 10 log lines
-                print('File size:', log_tracker.get('total_size'))
+                print('File size:', log_tracker.get('total_size', 0))
                 for status_code in status_codes:
                     if log_tracker.get(status_code):
                         # status code has been seen, and is being tracked
@@ -62,7 +62,7 @@ def parse_log():
                             status_code, log_tracker.get(status_code)))
 
             CYCLE += 1
-        print('File size:', log_tracker.get('total_size'))
+        print('File size:', log_tracker.get('total_size', 0))
         for status_code in status_codes:
             if log_tracker.get(status_code):
                 # status code has been seen, and is being tracked
@@ -70,7 +70,7 @@ def parse_log():
                     status_code, log_tracker.get(status_code)))
     except KeyboardInterrupt as e:
         # CTRL + C entered
-        print('File size:', log_tracker.get('total_size'))
+        print('File size:', log_tracker.get('total_size', 0))
         for status_code in status_codes:
             if log_tracker.get(status_code):
                 # status code has been seen, and is being tracked
