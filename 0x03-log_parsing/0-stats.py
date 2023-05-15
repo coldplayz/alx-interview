@@ -83,6 +83,8 @@ def parse_log():
                             status_code, log_tracker.get(status_code)))
 
             CYCLE += 1
+
+        # on log end
         print('File size:', log_tracker.get('total_size', 0))
         for status_code in status_codes:
             if log_tracker.get(status_code):

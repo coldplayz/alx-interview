@@ -30,6 +30,6 @@ for i in range(10000):
 
 for log in logs:
     sleep(random.random())
-    # print(log)
+    # print(log) # print seems to buffer before flushing
     sys.stdout.write(log)
     sys.stdout.flush()
