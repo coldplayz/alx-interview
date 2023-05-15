@@ -23,6 +23,7 @@ def parse_log():
         r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))' +\
         r'\.([1-9]|[1-9][0-9]|' +\
         r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))'
+    IP_REGEX2 = r'.*?'
     DATE_REGEX = r'\[.*?\]'  # lazy quantifier
     STATUS_REGEX = r'(200|301|400|401|403|404|405|500)'
     # STATUS_REGEX = r'([2-5]0[01345])'  # in the `status_codes` range
@@ -34,8 +35,8 @@ def parse_log():
             # print(log)
             # get a Match object, or None
             match = re.search(
-                    r'^{} - {} "GET /projects/260 HTTP/1.1" {} {}$'.format(
-                        IP_REGEX, DATE_REGEX, STATUS_REGEX, SIZE_REGEX), log)
+                    r'^{}\s*-\s*{} "GET /projects/260 HTTP/1.1" {} {}$'.format(
+                        IP_REGEX2, DATE_REGEX, STATUS_REGEX, SIZE_REGEX), log)
             # print(match)
             if match:
                 # get captured groups, in a tuple
