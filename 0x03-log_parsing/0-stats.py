@@ -25,7 +25,8 @@ def parse_log():
         r'(1[0-9][0-9]|2(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-5])))'
     IP_REGEX2 = r'.*?'
     DATE_REGEX = r'\[.*?\]'  # lazy quantifier
-    STATUS_REGEX = r'(200|301|400|401|403|404|405|500)'
+    STATUS_REGEX = r'(.*?)'
+    # STATUS_REGEX = r'(200|301|400|401|403|404|405|500)'
     # STATUS_REGEX = r'([2-5]0[01345])'  # in the `status_codes` range
     SIZE_REGEX = r'([0-9]*)'
     # SIZE_REGEX = r'([1-9]|[1-9][0-9]|[1-9][0-9]{2}|10[0-2][0-4])'
@@ -44,12 +45,31 @@ def parse_log():
                 # get file size and status code, as strings
                 f_size = groups[-1]
                 status = groups[-2]
+                codes = [
+                        '200',
+                        '301',
+                        '400',
+                        '401',
+                        '403',
+                        '404',
+                        '405',
+                        '500',
+                        ]
+                if status not in codes:
+                    status = None
                 # update logs
-                log_tracker.update({
-                    'total_size': log_tracker.get(
-                        'total_size', 0) + int(f_size),
-                    status: log_tracker.get(status, 0) + 1,
-                    })
+                if status:
+                    log_tracker.update({
+                        'total_size': log_tracker.get(
+                            'total_size', 0) + int(f_size),
+                        status: log_tracker.get(status, 0) + 1,
+                        })
+                else:
+                    # increment total file size only
+                    log_tracker.update(
+                            total_size=log_tracker.get(
+                                'total_size', 0) + int(f_size),
+                            )
 
             # print('##########################')
 
