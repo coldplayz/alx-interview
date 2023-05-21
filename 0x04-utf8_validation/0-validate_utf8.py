@@ -46,7 +46,7 @@ def validUTF8(data):
     # data is a list of at least one integer
     bins = [bin(n)[2:] for n in data]  # convert integer to binary
     full_bins = get_full_binary(bins)  # ensure 8 digits each
-    print(full_bins)
+    # print(full_bins)
 
     list_len = len(full_bins)
     continuation = 0
