@@ -15,13 +15,9 @@ def get_full_binary(bins):
         bin_length = len(b)
         diff = 8 - bin_length
         full_bin = b
-        if diff > 0:
+        if diff != 0:
             # pad with zeros
             full_bin = ('0' * diff) + b
-        elif diff < 0:
-            # trim to eight characters
-            positive_diff = diff * -1
-            full_bin = b[positive_diff:]
         full_bins.append(full_bin)
 
     return full_bins
@@ -88,7 +84,4 @@ def validUTF8(data):
             # invalid sequence
             return False
 
-    if continuation:
-        # list ended without completing bytes
-        return False
     return True
