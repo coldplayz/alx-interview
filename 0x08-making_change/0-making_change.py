@@ -2,7 +2,12 @@
 """ Algorithm practice: making change.
 """
 
+# implement memoization of results
+MEMORY = {}
 
+
+# IMPROVE: to also provide use case data from
+# ...the divisors queue instead of just from the multiplier
 def giveUpUseCases(
         multiples: int,
         multiplier: int,
@@ -100,6 +105,17 @@ def makeChange(coins, total):
           infinite number of each denomination of coin in the list.
         - The value of a coin will always be an integer greater than 0.
     """
+    global MEMORY
+
+    # see if this use case has been solved already
+    # IMPROVE: sorting coins first
+    strTotal = str(total)
+    strCoins = str(coins)
+    case = strTotal + strCoins
+    result = MEMORY.get(case, None)
+    if result:
+        return result
+
     RES = 0
     REARRANGED = False
     # f_callCount = 0  # SCAFF
@@ -184,7 +200,11 @@ def makeChange(coins, total):
 
         return RES
 
-    return f(coins, total)
+    # memoize result
+    result = f(coins, total)
+    MEMORY[case] = result
+
+    return result
 
 
 # print(makeChange([1, 2, 25], 37))
