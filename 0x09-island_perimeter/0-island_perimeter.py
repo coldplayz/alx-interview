@@ -24,6 +24,12 @@ def island_perimeter(grid):
     Returns:
     --------
         - int: the perimeter of the island
+
+    Basic algorithm stems from the direct relationship between
+    ...water tiles and cell perimeter.
+
+    The more water tiles is surrounding a cell, the greater its perimeter,
+    ...and therefore the greater the perimeter of the island.
     """
     if not isinstance(grid, list) or len(grid) == 0:
         return 0
@@ -35,6 +41,23 @@ def island_perimeter(grid):
     # determine how many rows in grid, and cols in each row
     row_num = len(grid)
     col_num = len(grid[0])
+
+    # since grid is surrounded by water, add extra water tiles for edge cells
+    for col in range(col_num):
+        # add one row atop row 0
+        cell_id = 'r{}c{}'.format(-1, col)
+        water_tiles.append(cell_id)
+        # add one row below last row
+        cell_id = 'r{}c{}'.format(row_num, col)
+        water_tiles.append(cell_id)
+
+    for row in range(row_num):
+        # add one column to left of first column
+        cell_id = 'r{}c{}'.format(row, -1)
+        water_tiles.append(cell_id)
+        # add one column to right of last column
+        cell_id = 'r{}c{}'.format(row, col_num)
+        water_tiles.append(cell_id)
 
     # traverse each row in grid, mapping water amd land tiles
     for row in range(row_num):
