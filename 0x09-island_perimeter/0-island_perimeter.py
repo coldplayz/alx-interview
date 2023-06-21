@@ -42,7 +42,8 @@ def island_perimeter(grid):
     row_num = len(grid)
     col_num = len(grid[0])
 
-    # since grid is surrounded by water, add extra water tiles for edge cells
+    # since grid is surrounded by water,
+    # ...add extra water tiles for edge land cells
     for col in range(col_num):
         # add one row atop row 0
         cell_id = 'r{}c{}'.format(-1, col)
