@@ -27,7 +27,7 @@ def isPrime(n):
 def isWinner(x, nums):
     """ Solves the prime game puzzle.
     """
-    if x == 0 or not isinstance(nums, list) or not nums:
+    if x < 1 or not isinstance(nums, list) or not nums:
         return None
 
     maria_wins = 0
@@ -35,21 +35,17 @@ def isWinner(x, nums):
 
     for num in nums:
         num_rng = list(range(1, num + 1))
-        num_rng_mutate = num_rng.copy()
-        turn = 'maria'
+        num_primes = 0
 
         for n in num_rng:
             if isPrime(n):
-                turn = 'ben' if turn == 'maria' else 'maria'
-                num_rng_mutate.remove(n)
-                max_multiple = num // n
-                for multiple in range(2, max_multiple + 1):
-                    product = n * multiple
-                    if product in num_rng_mutate:
-                        num_rng_mutate.remove(product)
-        if turn == 'maria':
+                num_primes += 1
+
+        if num_primes % 2 == 0:
+            # Ben wins for even number of primes as Maria starts always
             ben_wins += 1
         else:
+            # Maria wins for odd number of primes
             maria_wins += 1
 
     if maria_wins > ben_wins:
