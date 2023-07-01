@@ -33,40 +33,41 @@ def isWinner(x, nums):
 
     maria_wins = 0
     ben_wins = 0
-    # results = {}  # {prime: number of multiples, incl 1}
-    max_num = max(nums)
-    multiples = []  # all multiples across rounds
+    # max_num = max(nums)
+    # multiples = []  # all multiples across rounds
     # current_primes = []  # all prime numbers across rounds
 
-    for n in range(1, max_num + 1):
-        # record all multiples/composites for all primes
-        # ...not greater than the square root of max_num
-        if n in multiples:
-            # n is not prime
-            continue
-
-        if (n ** 2) > max_num:
-            break
-
-        if isPrime(n):
-            # multiples.append(n)
-            # record its multiples as non-prime
-            max_multiple = max_num // n
-            for i in range(2, max_multiple + 1):
-                multiple = n * i
-                if multiple not in multiples:
-                    multiples.append(multiple)
-            # remove duplicates
-            # multiples = list(set(multiples))
-
-    # process the collected data
     for num in nums:
-        # get multiples for a specific round
-        num_multiples = list(filter(lambda x: x <= num, multiples))
-        # total multiples plus one for 1 (a non-prime)
-        multiples_len = len(num_multiples) + 1
-        # determine round winner
-        num_primes = num - multiples_len
+        num_rng = list(range(1, num + 1))
+        # SCAFF
+        # if num < 5:
+            # print(num_rng)
+            # print('##############')
+        # -----
+        num_primes = 0
+        multiples = []
+
+        if num_rng:
+            multiples.append(1)
+
+        for n in num_rng:
+            if n in multiples:
+                # n is not prime
+                continue
+
+            if (n ** 2) > num:
+                break
+
+            if isPrime(n):
+                # multiples.append(n)
+                # record its multiples as non-prime
+                max_multiple = num // n
+                for i in range(2, max_multiple + 1):
+                    multiples.append(n * i)
+                # remove duplicates
+                multiples = list(set(multiples))
+
+        num_primes = num - len(multiples)
 
         if num_primes % 2 == 0:
             # Ben wins for even number of primes as Maria starts always
@@ -76,6 +77,9 @@ def isWinner(x, nums):
             # Maria wins for odd number of primes
             # print('round winner: Maria')  # SCAFF
             maria_wins += 1
+
+        # print('round: {}'.format(num))  # SCAFF
+        # print('###############')  # SCAFF
 
     if maria_wins > ben_wins:
         return 'Maria'

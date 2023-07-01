@@ -1,0 +1,85 @@
+#!/usr/bin/python3
+""" The prime game puzzle.
+"""
+
+
+def isPrime(n):
+    """ Determine if the number, n, is a prime number.
+    """
+    if type(n) is not int or n < 2:
+        return False
+
+    limit = n // 2
+    divisors = 0
+    # print(n)  # SCAFF
+
+    for divisor in range(1, limit + 1):
+        if (n % divisor) == 0:
+            divisors += 1
+
+        if divisors > 1:
+            return False
+
+    if divisors > 1:
+        return False
+    return True
+
+
+def isWinner(x, nums):
+    """ Solves the prime game puzzle.
+    """
+    if x < 1 or not isinstance(nums, list) or not nums:
+        return None
+
+    maria_wins = 0
+    ben_wins = 0
+    max_num = max(nums)
+    multiples = []  # all multiples across rounds
+    current_primes = []  # all prime numbers across rounds
+
+    for num in nums:
+        num_rng = list(range(1, num + 1))
+        # SCAFF
+        # if num < 5:
+            # print(num_rng)
+            # print('##############')
+        # -----
+        num_primes = 0
+
+        for n in num_rng:
+            if n in multiples:
+                # n is not prime
+                continue
+
+            if isPrime(n):
+                num_primes += 1
+                if n not in current_primes:
+                    # multiples of this prime not yet recorded
+                    current_primes.append(n)
+                    # record its multiples as non-prime
+                    max_multiple = max_num // n
+                    for i in range(2, max_multiple + 1):
+                        multiples.append(n * i)
+                    # remove duplicates
+                    multiples = list(set(multiples))
+
+        if num_primes % 2 == 0:
+            # Ben wins for even number of primes as Maria starts always
+            print('round winner: Ben')  # SCAFF
+            ben_wins += 1
+        else:
+            # Maria wins for odd number of primes
+            print('round winner: Maria')  # SCAFF
+            maria_wins += 1
+
+        print('round: {}'.format(num))  # SCAFF
+        print('###############')  # SCAFF
+
+    if maria_wins > ben_wins:
+        return 'Maria'
+
+    if maria_wins < ben_wins:
+        return 'Ben'
+
+    # else a tie
+    return None
